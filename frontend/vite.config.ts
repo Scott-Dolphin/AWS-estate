@@ -5,6 +5,12 @@
 
   export default defineConfig({
     plugins: [react()],
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: "./tests/setup.js",
+      css: true
+	  },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
