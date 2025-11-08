@@ -32,5 +32,5 @@ jobs:
           aws-region: us-east-2  # Set your region
 
       - name: Deploy static site to S3 bucket
-        run: aws s3 sync ./dist s3://juststoresomethingdammit --delete
+        run: aws s3 sync frontend/build s3://juststoresomethingdammit --delete
 
