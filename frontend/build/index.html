@@ -1,16 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Housing Market Viewer</title>
-      <script type="module" crossorigin src="/assets/index-Crmx4NF-.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-uE_mwa1X.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Market Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                },
+            },
+        }
+    </script>
+</head>
 
-    <body>
-      <div id="root"></div>
-    </body>
-  </html>
-  
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-10 rounded-xl shadow-lg w-full max-w-md text-center border border-gray-100">
+        <div class="mb-6 flex justify-center">
+            <!-- Simple Home Icon -->
+            <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                </path>
+            </svg>
+        </div>
+
+        <h1 class="text-3xl font-extrabold mb-2 text-gray-900">Housing Market</h1>
+        <p class="text-gray-500 mb-8">Secure Portal</p>
+
+        <a id="login-button" href="#"
+            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                        clip-rule="evenodd" />
+                </svg>
+            </span>
+            Sign In with Cognito
+        </a>
+    </div>
+
+    <script>
+        const COGNITO_DOMAIN = 'us-east-2tz5g28trk.auth.us-east-2.amazoncognito.com';
+        const CLIENT_ID = '3tmrmdgp4oer1p7midni2o3umi';
+
+        const S3_BUCKET_URL = 'https://dhsfy8233s5x7.cloudfront.net';
+        const REDIRECT_URI = `${S3_BUCKET_URL}/dashboard.html`;
+
+        const SCOPES = 'email openid phone';
+
+        (function () {
+            const encodedRedirect = encodeURIComponent(REDIRECT_URI);
+            const encodedScopes = encodeURIComponent(SCOPES);
+
+            const loginUrl = `https://${COGNITO_DOMAIN}/login?response_type=token&client_id=${CLIENT_ID}&redirect_uri=${encodedRedirect}&scope=${encodedScopes}`;
+
+            document.getElementById('login-button').href = loginUrl;
+        })();
+    </script>
+
+</body>
+
+</html>

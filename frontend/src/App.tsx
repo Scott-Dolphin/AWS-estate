@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { LoginForm } from './components/LoginForm';
+import { useState, useMemo, useEffect } from 'react';
+// REMOVED: import { LoginForm } from './components/LoginForm'; 
 import { HouseCard, House } from './components/HouseCard';
 import { FilterBar, FilterOptions } from './components/FilterBar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
@@ -94,8 +94,11 @@ const mockHouses: House[] = [
 ];
 
 export default function App() {
+  // COGNITO LOGIC STATE
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [currentUser, setCurrentUser] = useState('Agent'); // Default name
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<FilterOptions>({
     city: '',
@@ -105,16 +108,42 @@ export default function App() {
     bathrooms: '',
   });
 
-  const handleLogin = (username: string, password: string) => {
-    // Mock authentication - accepts any username/password
-    setCurrentUser(username);
-    setIsLoggedIn(true);
-  };
+  // --- NEW COGNITO AUTH CHECK ---
+  useEffect(() => {
+    const hash = window.location.hash;
+    const storedToken = localStorage.getItem('cognito_token');
+
+    if (hash && hash.includes('access_token')) {
+      // 1. Came from Cognito Login
+      console.log("Cognito login successful!");
+      localStorage.setItem('cognito_token', hash);
+      setIsLoggedIn(true);
+      setCurrentUser('Agent'); // In a real app, you'd decode the JWT to get the email
+
+      // Clear URL
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    else if (storedToken) {
+      // 2. Already logged in
+      setIsLoggedIn(true);
+      setCurrentUser('Agent');
+    }
+    else {
+      // 3. Not logged in -> Redirect to Landing Page
+      window.location.href = '/index.html';
+    }
+
+    setIsLoading(false);
+  }, []);
+  // ------------------------------
 
   const handleLogout = () => {
+    // Clear session and go back to landing
+    localStorage.removeItem('cognito_token');
     setIsLoggedIn(false);
     setCurrentUser('');
     setFavorites(new Set());
+    window.location.href = '/index.html';
   };
 
   const toggleFavorite = (houseId: string) => {
@@ -154,8 +183,13 @@ export default function App() {
     return mockHouses.filter((house) => favorites.has(house.id));
   }, [favorites]);
 
+  // SHOW LOADING OR NOTHING IF REDIRECTING
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
   if (!isLoggedIn) {
-    return <LoginForm onLogin={handleLogin} />;
+    return null; // We are redirecting to /index.html anyway
   }
 
   return (
@@ -196,7 +230,7 @@ export default function App() {
 
           <TabsContent value="all" className="space-y-6">
             <FilterBar filters={filters} onFilterChange={setFilters} />
-            
+
             {filteredHouses.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500">No properties match your filters</p>
