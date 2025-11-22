@@ -58,7 +58,7 @@
       },
       "scripts": {
             "dev": "vite",
-            "build": "vite build",
+            "build": "vite build && mv build/index.html build/dashboard.html && cp public/login.html build/index.html",
             "test": "vitest",
             "test-once": "vitest run",
             "lint": "eslint . --ext js, jsx --report-unused-disable-directive --max-warnings 0"
