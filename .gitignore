@@ -1,20 +1,41 @@
 # Dependencies
-frontend/node_modules/ 
 node_modules/
+frontend/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+coverage/
+.nyc_output/
 
 # Production builds
-frontend/build/ 
 build/
-frontend/dist/ 
 dist/
+frontend/build/
+frontend/dist/
 
-# Syst & Editor Files
-.history/
+# System & Editor Files
 .DS_Store
-.vscode
+.vscode/
+.idea/
+*.swp
+*.swo
+.history/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment
-.env/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 env/
-.venv/
 venv/
+.venv/
