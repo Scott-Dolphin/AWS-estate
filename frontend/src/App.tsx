@@ -120,7 +120,12 @@ export default function App() {
       const safeHouseList = houseList.map((h: any) => ({
         ...h,
         price: typeof h.price === 'number' ? h.price : 0,
-        id: h.HouseID || h.id,
+
+        // --- FIXED: Ensure ID is always found AND always a String ---
+        // This fixes the "Missing required fields" (by checking multiple keys)
+        // AND fixes the "ValidationException" (by wrapping in String())
+        id: String(h.HouseID || h.houseId || h.id || h.house_id || h.key || 'missing-id'),
+
         city: h.city || 'Unknown',
         address: h.address || 'No Address',
         bedrooms: h.bed || h.bedrooms || 0,
